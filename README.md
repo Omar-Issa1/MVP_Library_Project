@@ -8,7 +8,7 @@ This documentation details the structure, functionality, and API endpoints of th
 
 The `package.json` file manages project dependencies, scripts, and metadata.
 
-- **Scripts**:  
+- **Scripts**:
   - `start`: Runs the server (`node server.js`)
   - `dev`: Runs the server with auto-reload (`nodemon server.js`)
 - **Dependencies**:
@@ -48,17 +48,18 @@ The `package.json` file manages project dependencies, scripts, and metadata.
 
 This file stores environment variables for database and JWT configuration.
 
-| Variable         | Purpose                                    |
-|------------------|--------------------------------------------|
-| DB_USER          | Database username                          |
-| DB_PASSWORD      | Database password                          |
-| DB_HOST          | Database host (usually `localhost`)        |
-| DB_NAME          | Name of the PostgreSQL database            |
-| DB_PORT          | Database port (default PostgreSQL: 5432)   |
-| JWT_SECRET       | Secret used for JWT token signing          |
-| JWT_EXPIRES_IN   | Token expiration duration (e.g., `7d`)     |
+| Variable       | Purpose                                  |
+| -------------- | ---------------------------------------- |
+| DB_USER        | Database username                        |
+| DB_PASSWORD    | Database password                        |
+| DB_HOST        | Database host (usually `localhost`)      |
+| DB_NAME        | Name of the PostgreSQL database          |
+| DB_PORT        | Database port (default PostgreSQL: 5432) |
+| JWT_SECRET     | Secret used for JWT token signing        |
+| JWT_EXPIRES_IN | Token expiration duration (e.g., `7d`)   |
 
 Example:
+
 ```
 DB_USER=postgres
 DB_PASSWORD=your_password
@@ -75,8 +76,8 @@ JWT_EXPIRES_IN=7d
 
 This is the main entry point for the backend server.
 
-- **Loads environment variables**  
-- **Initializes Express server**  
+- **Loads environment variables**
+- **Initializes Express server**
 - **Serves static files** (from `/public` and `/src/uploads`)
 - **Enables JSON and URL-encoded middleware**
 - **Logs requests in non-production mode**
@@ -163,16 +164,18 @@ db.connect()
 
 Contains Express middleware for authentication and authorization.
 
-- **`authenticate`:** 
+- **`authenticate`:**
+
   - Verifies JWT token in the `Authorization` header.
   - Sets `req.user` if valid.
   - Returns 401 if missing/invalid.
 
-- **`requireAdmin`:** 
+- **`requireAdmin`:**
+
   - Checks `req.user.role` is `"admin"`.
   - Returns 403 if not.
 
-- **`requireUser`:** 
+- **`requireUser`:**
   - Checks `req.user.role` is `"user"`.
   - Returns 403 if not.
 
@@ -700,6 +703,7 @@ Handles user-specific features:
 ### `authRoutes.js`
 
 Handles authentication endpoints.
+
 - `/admin/login` - POST
 - `/user/register` - POST
 - `/user/login` - POST
@@ -707,6 +711,7 @@ Handles authentication endpoints.
 ### `userRoutes.js`
 
 For authenticated users (`authenticate` + `requireUser` middleware):
+
 - `/favorites/:bookId` - POST, DELETE
 - `/favorites` - GET
 - `/progress` - POST, GET
@@ -735,6 +740,7 @@ All HTML files are RTL Arabic and include a shared navbar, main sections, and sc
 - **`register.html`**: User registration form.
 
 All pages include:
+
 - Navbar with links shown/hidden based on authentication and role.
 - Dedicated scripts for interactions.
 
@@ -757,6 +763,7 @@ Loads and displays all books on the home page, with live search and add-to-favor
 ### `admin.js`
 
 Handles admin workflow:
+
 - Login
 - Uploading new books (with files)
 - Managing (edit/delete) books
@@ -765,6 +772,7 @@ Handles admin workflow:
 ### `book.js`
 
 Interactive book reader:
+
 - Loads book details and PDF
 - Zoom, reading mode, and navigation
 - Favorite/unfavorite
@@ -791,17 +799,23 @@ Handle user login and registration forms, show error/success, and set authentica
 
 ```mermaid
 flowchart TD
-    Client[Frontend (HTML/JS)] -->|HTTP| Server[Express API]
-    Server -->|DB Queries| PG[PostgreSQL]
-    Server -.->|Static| Filesystem[Public / Uploads]
-    subgraph API Routes
-      Server --> BookCtrl[Book Controller]
-      Server --> AuthCtrl[Auth Controller]
-      Server --> UserCtrl[User Controller]
+
+    Client["Frontend (HTML / JavaScript)"] -->|HTTP Requests| Server["Express.js API Server"]
+
+    Server -->|SQL Queries| PG["PostgreSQL Database"]
+
+    Server -.->|Serves Static Files| FS["Public Folder / Uploaded Files"]
+
+    subgraph API_Routes["API Routes"]
+        Server --> BookCtrl["Book Controller"]
+        Server --> AuthCtrl["Auth Controller"]
+        Server --> UserCtrl["User Controller"]
     end
-    BookCtrl -->|CRUD| PG
-    AuthCtrl -->|User/Admin| PG
-    UserCtrl -->|Favorites/Progress| PG
+
+    BookCtrl -->|CRUD Books| PG
+    AuthCtrl -->|Users & Admin Auth| PG
+    UserCtrl -->|Favorites & Reading Progress| PG
+
 ```
 
 ---
