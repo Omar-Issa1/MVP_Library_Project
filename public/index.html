@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <title>المكتبة | الرئيسية</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="container nav-content">
+        <a href="index.html" class="logo">
+          📚 المكتبة
+          <span>Beta</span>
+        </a>
+        <nav class="nav-links">
+          <a href="index.html">الرئيسية</a>
+          <a href="favorites.html" class="nav-user-only hidden">مفضلتي</a>
+          <a href="admin.html" class="nav-admin-only hidden">لوحة التحكم</a>
+        </nav>
+        <div class="nav-auth">
+          <a href="login.html" class="btn btn-outline nav-guest-only"
+            >تسجيل الدخول</a
+          >
+          <a href="register.html" class="btn btn-primary nav-guest-only"
+            >إنشاء حساب</a
+          >
+          <span class="nav-user-info nav-user-only hidden"></span>
+          <button class="btn btn-outline nav-user-only hidden" id="logout-btn">
+            تسجيل الخروج
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="page-header">
+        <h1>اكتشف مكتبتك الرقمية</h1>
+        <p>تصفح الكتب، أضفها إلى مفضلتك، وابدأ القراءة أينما كنت.</p>
+
+        <div class="search-bar">
+          <div class="search-input-wrap">
+            <span>🔍</span>
+            <input
+              id="search-input"
+              type="text"
+              placeholder="ابحث عن كتاب أو مؤلف أو فئة..."
+            />
+          </div>
+          <div class="chip text-muted">المحتوى عام للجميع 👀</div>
+        </div>
+      </section>
+
+      <section>
+        <div id="books-grid" class="books-grid"></div>
+        <p id="books-empty" class="text-muted mt-3 hidden">
+          لا توجد كتب حتى الآن.
+        </p>
+      </section>
+    </main>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/main.js"></script>
+  </body>
+</html>

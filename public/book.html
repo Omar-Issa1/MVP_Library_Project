@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <title>قراءة كتاب</title>
+
+    <link rel="stylesheet" href="/css/style.css" />
+
+    <!-- PDF.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
+
+    <style>
+      .reading-mode #pdf-toolbar,
+      .reading-mode h3 {
+        display: none !important;
+      }
+
+      .reading-mode #pdf-container {
+        border: none !important;
+        background: #1c1c1c !important;
+      }
+
+      .pdf-page-wrapper {
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: center;
+      }
+
+      canvas {
+        image-rendering: auto;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header class="navbar">
+      <div class="container nav-content">
+        <a href="index.html" class="logo"> 📚 المكتبة <span>Beta</span> </a>
+
+        <nav class="nav-links">
+          <a href="index.html">الرئيسية</a>
+          <a href="favorites.html" class="nav-user-only hidden">مفضلتي</a>
+          <a href="admin.html" class="nav-admin-only hidden">لوحة التحكم</a>
+        </nav>
+
+        <div class="nav-auth">
+          <a href="login.html" class="btn btn-outline nav-guest-only">
+            تسجيل الدخول
+          </a>
+          <a href="register.html" class="btn btn-primary nav-guest-only">
+            إنشاء حساب
+          </a>
+
+          <span class="nav-user-info nav-user-only hidden"></span>
+
+          <button id="logout-btn" class="btn btn-outline nav-user-only hidden">
+            تسجيل الخروج
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <h1 id="book-title"></h1>
+      <p id="book-author" class="text-muted"></p>
+
+      <div
+        id="book-cover-wrap"
+        style="
+          margin: 15px 0;
+          width: 200px;
+          height: 300px;
+          border-radius: 12px;
+          overflow: hidden;
+          box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+        "
+      ></div>
+
+      <div style="margin: 20px 0; display: flex; gap: 10px; flex-wrap: wrap">
+        <button id="favorite-btn" class="btn btn-primary">
+          ❤️ إضافة إلى المفضلة
+        </button>
+
+        <button id="remove-favorite-btn" class="btn btn-danger hidden">
+          💔 إزالة من المفضلة
+        </button>
+
+        <button id="save-progress-btn" class="btn btn-outline">
+          💾 حفظ التقدم
+        </button>
+
+        <button id="go-progress-btn" class="btn btn-outline hidden">
+          ⏩ آخر صفحة وصلت لها
+        </button>
+
+        <a id="download-btn" class="btn btn-outline" href="#" download>
+          ⬇ تحميل الكتاب
+        </a>
+      </div>
+
+      <p id="book-description"></p>
+
+      <!-- زر الخروج من وضع القراءة -->
+      <button
+        id="exit-reading"
+        class="btn btn-danger hidden"
+        style="margin-bottom: 15px"
+      >
+        🔙 الخروج من وضع القراءة
+      </button>
+
+      <!-- PDF Viewer -->
+      <section class="section-card mt-4">
+        <h3>📘 قراءة الكتاب</h3>
+
+        <!-- Toolbar -->
+        <div
+          id="pdf-toolbar"
+          style="
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+          "
+        >
+          <button id="zoom-in" class="btn btn-sm btn-outline">➕ تكبير</button>
+          <button id="zoom-out" class="btn btn-sm btn-outline">➖ تصغير</button>
+
+          <button id="reading-mode" class="btn btn-sm btn-outline">
+            📖 وضع القراءة
+          </button>
+        </div>
+
+        <div
+          id="pdf-container"
+          style="
+            flex: 1;
+            height: 700px;
+            overflow: auto;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background: white;
+            padding: 10px;
+          "
+        >
+          <div id="continuous-wrapper"></div>
+        </div>
+      </section>
+    </main>
+
+    <script src="/js/navbar.js"></script>
+    <script src="/js/api.js"></script>
+    <script src="/js/book.js"></script>
+  </body>
+</html>

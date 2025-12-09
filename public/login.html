@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <title>تسجيل الدخول</title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <header class="navbar">
+      <div class="container nav-content">
+        <a href="index.html" class="logo">
+          📚 المكتبة
+          <span>Beta</span>
+        </a>
+        <nav class="nav-links">
+          <a href="index.html">الرئيسية</a>
+          <a href="favorites.html" class="nav-user-only hidden">مفضلتي</a>
+          <a href="admin.html" class="nav-admin-only hidden">لوحة التحكم</a>
+        </nav>
+        <div class="nav-auth">
+          <a href="login.html" class="btn btn-outline nav-guest-only"
+            >تسجيل الدخول</a
+          >
+          <a href="register.html" class="btn btn-primary nav-guest-only"
+            >إنشاء حساب</a
+          >
+          <span class="nav-user-info nav-user-only hidden"></span>
+          <button class="btn btn-outline nav-user-only hidden" id="logout-btn">
+            تسجيل الخروج
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="form-card">
+        <h1>تسجيل الدخول</h1>
+        <p>اكتب بريدك الإلكتروني وكلمة المرور للدخول إلى حسابك.</p>
+
+        <div id="login-alert" class="alert alert-error hidden"></div>
+
+        <div class="form-group">
+          <label for="email">البريد الإلكتروني</label>
+          <input id="email" type="email" placeholder="example@mail.com" />
+        </div>
+
+        <div class="form-group">
+          <label for="password">كلمة المرور</label>
+          <input id="password" type="password" placeholder="••••••••" />
+        </div>
+
+        <button id="login-btn" class="btn btn-primary mt-3">
+          تسجيل الدخول
+        </button>
+
+        <p class="mt-3 text-muted">
+          ليس لديك حساب؟
+          <a href="register.html">إنشاء حساب جديد</a>
+        </p>
+      </section>
+    </main>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/login.js"></script>
+  </body>
+</html>
