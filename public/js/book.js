@@ -1,10 +1,11 @@
 let pdfDoc = null;
-let scale = 1.2;
+let scale = 1.4; // تكبير مبدئي أحسن للقراءة
 let bookId = null;
 let currentPage = 1;
 
 const pdfContainer = document.getElementById("pdf-container");
 const continuousWrapper = document.getElementById("continuous-wrapper");
+const miniMapPages = document.getElementById("mini-map-pages");
 
 /* ================================
       تحميل الكتاب من API
@@ -17,7 +18,8 @@ async function loadBook() {
 
   document.getElementById("book-title").textContent = book.title;
   document.getElementById("book-author").textContent = book.author;
-  document.getElementById("book-description").textContent = book.description;
+  document.getElementById("book-description").textContent =
+    book.description || "";
 
   if (book.cover_path) {
     document.getElementById("book-cover-wrap").innerHTML = `
@@ -37,7 +39,7 @@ async function loadBook() {
     }
   }
 
-  // التقدم
+  // التقدم السابق
   if (getRole() === "user") {
     const prog = await apiRequest(`/user/progress/${bookId}`, { auth: true });
 
@@ -53,7 +55,8 @@ async function loadBook() {
   const url = `/uploads/${book.file_path}`;
   pdfDoc = await pdfjsLib.getDocument(url).promise;
 
-  renderAllPages();
+  await renderAllPages();
+  buildMiniMap();
 }
 
 /* ================================
@@ -81,38 +84,91 @@ async function renderAllPages() {
       canvasContext: canvas.getContext("2d"),
       viewport,
     }).promise;
-
-    if (i === currentPage) {
-      setTimeout(() => goToPage(i), 50);
-    }
   }
+
+  // بعد إعادة الرسم، روح للصفحة الحالية
+  setTimeout(() => goToPage(currentPage, false), 50);
 }
 
 /* الذهاب لصفحة معينة */
-function goToPage(num) {
+function goToPage(num, smooth = true) {
   const target = continuousWrapper.querySelector(
     `.pdf-page-wrapper[data-page="${num}"]`
   );
   if (target) {
+    currentPage = num;
     pdfContainer.scrollTo({
       top: target.offsetTop,
-      behavior: "smooth",
+      behavior: smooth ? "smooth" : "instant",
     });
+    updateMiniMapActive();
   }
 }
+
+/* ================================
+      Mini-Map (خريطة الصفحات)
+================================ */
+function buildMiniMap() {
+  miniMapPages.innerHTML = "";
+  if (!pdfDoc) return;
+
+  for (let i = 1; i <= pdfDoc.numPages; i++) {
+    const item = document.createElement("div");
+    item.className = "mini-map-page";
+    item.dataset.page = i;
+    item.onclick = (e) => {
+      e.stopPropagation();
+      goToPage(i);
+    };
+    miniMapPages.appendChild(item);
+  }
+  updateMiniMapActive();
+}
+
+function updateMiniMapActive() {
+  if (!pdfDoc) return;
+  const items = miniMapPages.querySelectorAll(".mini-map-page");
+  items.forEach((el) => {
+    el.classList.toggle("active", Number(el.dataset.page) === currentPage);
+  });
+}
+
+/* متابعة الصفحة الحالية حسب السكروول */
+pdfContainer.addEventListener("scroll", () => {
+  const pages = [...continuousWrapper.children];
+  if (!pages.length) return;
+
+  const scrollTop = pdfContainer.scrollTop;
+  let minDelta = Infinity;
+  let nearestPage = currentPage;
+
+  pages.forEach((p) => {
+    const delta = Math.abs(scrollTop - p.offsetTop);
+    if (delta < minDelta) {
+      minDelta = delta;
+      nearestPage = Number(p.dataset.page);
+    }
+  });
+
+  if (nearestPage !== currentPage) {
+    currentPage = nearestPage;
+    updateMiniMapActive();
+  }
+});
 
 /* ================================
       زووم
 ================================ */
 document.getElementById("zoom-in").onclick = () => {
-  scale += 0.2;
-  renderAllPages();
+  scale += 0.3;
+  if (scale > 2.5) scale = 2.5;
+  renderAllPages().then(updateMiniMapActive);
 };
 
 document.getElementById("zoom-out").onclick = () => {
-  scale -= 0.2;
+  scale -= 0.3;
   if (scale < 0.5) scale = 0.5;
-  renderAllPages();
+  renderAllPages().then(updateMiniMapActive);
 };
 
 /* ================================
@@ -168,19 +224,5 @@ document.getElementById("save-progress-btn").onclick = async () => {
 
   alert("✔ تم حفظ تقدمك");
 };
-
-/* متابعة الصفحة الحالية حسب السكروول */
-pdfContainer.addEventListener("scroll", () => {
-  const pages = [...continuousWrapper.children];
-  let minDelta = Infinity;
-
-  pages.forEach((p) => {
-    const delta = Math.abs(pdfContainer.scrollTop - p.offsetTop);
-    if (delta < minDelta) {
-      minDelta = delta;
-      currentPage = Number(p.dataset.page);
-    }
-  });
-});
 
 document.addEventListener("DOMContentLoaded", loadBook);
