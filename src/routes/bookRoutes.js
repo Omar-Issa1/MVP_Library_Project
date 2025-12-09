@@ -11,7 +11,6 @@ import { authenticate, requireAdmin } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// إعداد multer لحفظ الملفات داخل src/uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     if (file.fieldname === "cover") {

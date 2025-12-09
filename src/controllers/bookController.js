@@ -2,7 +2,6 @@ import fs from "fs";
 import path from "path";
 import { db } from "../config/db.js";
 
-// 🧠 حذف ملف بأمان (صورة / PDF)
 const safeUnlink = (relPath) => {
   try {
     if (!relPath) return;
@@ -75,7 +74,6 @@ export const addBook = async (req, res) => {
       return res.status(400).json({ message: "Book PDF file is required" });
     }
 
-    // ✅ تخزين المسارات النسبية الصحيحة (بدون /uploads)
     const coverPath = coverFile ? `covers/${coverFile.filename}` : null;
     const filePath = `books/${bookFile.filename}`;
 

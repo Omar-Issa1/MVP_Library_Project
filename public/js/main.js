@@ -56,7 +56,6 @@ async function loadBooks() {
       `;
 
       card.addEventListener("click", (e) => {
-        // لو ضغط على زر المفضلة لا ننتقل للكتاب
         if (e.target.closest(".add-fav-btn")) return;
         window.location.href = `book.html?id=${book.id}`;
       });
@@ -64,7 +63,6 @@ async function loadBooks() {
       grid.appendChild(card);
     });
 
-    // بعد ما نضيف الكروت نفعّل زر المفضلة لو المستخدم مسجل
     if (getToken() && getRole() === "user") {
       document
         .querySelectorAll(".add-fav-btn")

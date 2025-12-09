@@ -11,7 +11,6 @@ import {
 
 const router = express.Router();
 
-// كل هذه المسارات خاصة بالمستخدم العادي فقط
 router.use(authenticate, requireUser);
 
 // Favorites

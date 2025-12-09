@@ -1,5 +1,5 @@
 let pdfDoc = null;
-let scale = 1.4; // تكبير مبدئي أحسن للقراءة
+let scale = 1.4;
 let bookId = null;
 let currentPage = 1;
 
@@ -7,9 +7,6 @@ const pdfContainer = document.getElementById("pdf-container");
 const continuousWrapper = document.getElementById("continuous-wrapper");
 const miniMapPages = document.getElementById("mini-map-pages");
 
-/* ================================
-      تحميل الكتاب من API
-================================ */
 async function loadBook() {
   const params = new URLSearchParams(window.location.search);
   bookId = Number(params.get("id"));
@@ -30,7 +27,6 @@ async function loadBook() {
 
   document.getElementById("download-btn").href = `/uploads/${book.file_path}`;
 
-  // حالة المفضلة
   if (getRole() === "user") {
     const fav = await apiRequest("/user/favorites", { auth: true });
     if (fav.some((f) => f.id == bookId)) {
@@ -39,7 +35,6 @@ async function loadBook() {
     }
   }
 
-  // التقدم السابق
   if (getRole() === "user") {
     const prog = await apiRequest(`/user/progress/${bookId}`, { auth: true });
 
@@ -59,9 +54,6 @@ async function loadBook() {
   buildMiniMap();
 }
 
-/* ================================
-      العرض المتتابع (Continuous)
-================================ */
 async function renderAllPages() {
   continuousWrapper.innerHTML = "";
 
@@ -86,11 +78,9 @@ async function renderAllPages() {
     }).promise;
   }
 
-  // بعد إعادة الرسم، روح للصفحة الحالية
   setTimeout(() => goToPage(currentPage, false), 50);
 }
 
-/* الذهاب لصفحة معينة */
 function goToPage(num, smooth = true) {
   const target = continuousWrapper.querySelector(
     `.pdf-page-wrapper[data-page="${num}"]`
@@ -105,9 +95,6 @@ function goToPage(num, smooth = true) {
   }
 }
 
-/* ================================
-      Mini-Map (خريطة الصفحات)
-================================ */
 function buildMiniMap() {
   miniMapPages.innerHTML = "";
   if (!pdfDoc) return;
@@ -133,7 +120,6 @@ function updateMiniMapActive() {
   });
 }
 
-/* متابعة الصفحة الحالية حسب السكروول */
 pdfContainer.addEventListener("scroll", () => {
   const pages = [...continuousWrapper.children];
   if (!pages.length) return;
@@ -156,9 +142,6 @@ pdfContainer.addEventListener("scroll", () => {
   }
 });
 
-/* ================================
-      زووم
-================================ */
 document.getElementById("zoom-in").onclick = () => {
   scale += 0.3;
   if (scale > 2.5) scale = 2.5;
@@ -171,9 +154,6 @@ document.getElementById("zoom-out").onclick = () => {
   renderAllPages().then(updateMiniMapActive);
 };
 
-/* ================================
-      وضع القراءة
-================================ */
 document.getElementById("reading-mode").onclick = () => {
   document.body.classList.add("reading-mode");
   document.getElementById("reading-mode").classList.add("hidden");
@@ -186,9 +166,6 @@ document.getElementById("exit-reading").onclick = () => {
   document.getElementById("reading-mode").classList.remove("hidden");
 };
 
-/* ================================
-      مفضلة
-================================ */
 document.getElementById("favorite-btn").onclick = async () => {
   await apiRequest(`/user/favorites/${bookId}`, {
     method: "POST",
@@ -209,9 +186,6 @@ document.getElementById("remove-favorite-btn").onclick = async () => {
   document.getElementById("favorite-btn").classList.remove("hidden");
 };
 
-/* ================================
-      حفظ التقدم
-================================ */
 document.getElementById("save-progress-btn").onclick = async () => {
   await apiRequest("/user/progress", {
     method: "POST",
