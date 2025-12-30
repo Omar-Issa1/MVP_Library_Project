@@ -13,7 +13,7 @@ const createToken = (payload) => {
 export const loginAdmin = async (req, res) => {
   try {
     const { username, password } = req.body;
-    console.log("ADMIN LOGIN BODY =", req.body);
+    // console.log("ADMIN LOGIN BODY =", req.body);
 
     if (!username || !password) {
       return res
@@ -50,7 +50,7 @@ export const loginAdmin = async (req, res) => {
 export const registerUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log("REGISTER BODY =", req.body);
+    // console.log("REGISTER BODY =", req.body);
 
     if (!email || !password) {
       return res.status(400).json({ message: "email and password required" });
@@ -83,7 +83,7 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log("USER LOGIN BODY =", req.body);
+    // console.log("USER LOGIN BODY =", req.body);
 
     if (!email || !password) {
       return res.status(400).json({ message: "email and password required" });
